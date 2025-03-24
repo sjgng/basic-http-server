@@ -5,8 +5,11 @@
 #include <unistd.h>
 
 #define PORT 2137
+#define BUFFER_SIZE 1024
 
 int main() {
+    char buffer[BUFFER_SIZE];
+
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         perror("webserver (socket)");
@@ -41,6 +44,12 @@ int main() {
             continue;
         }
         printf("connection accepted\n");
+
+        int valread = read(newsockfd, buffer, BUFFER_SIZE);
+        if (valread < 0) {
+            perror("webserver (read)");
+            continue;
+        }
 
         close(newsockfd);
     }
